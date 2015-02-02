@@ -24,3 +24,12 @@ to AsciiDoctor-flavour AsciiDoc.
    with Saxon.
 .. Process CF-specific content (e.g. remove revision highlights).
 .. Perform generic DocBook->AsciiDoc conversion.
+
+== Requirements
+
+* The DocBook sources for the CF convention document.
+* Python and the lxml package.
+* A recent version of the Saxon XSLT processor, and a suitable Java
+  runtime.
+* asciidoctor
+* ... and maybe asciidoctor-pdf (or another asciidoctor->PDF solution)
