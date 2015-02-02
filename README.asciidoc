@@ -1,0 +1,26 @@
+= Convert CF from DocBook to AsciiDoc[tor]
+Richard Hattersley
+
+Builds on the XSL stylesheet in
+https://github.com/oreillymedia/docbook2asciidoc to provide automated
+conversion of the CF convention document from
+https://github.com/cf-convention/cf-convention.github.io/tree/master/Data/cf-conventions/cf-conventions-1.7/docbooksrc[DocBook]
+to AsciiDoctor-flavour AsciiDoc.
+
+== Aims
+
+. Demonstrate the feasability of maintaining the CF conventions as AsciiDoc.
+. Determine the gap between (1) and full-featured AsciiDoc sources.
+. Provide a processing chain which generates full-featured AsciiDoc sources
+  from the DocBook sources.
+
+== Strategy
+
+. Maintain the DocBook sources as the *single* authoratitive source for
+  the CF conventions document until agreement can reached with CF
+  community to switch to AsciiDoc.
+. Provide a three step processing chain:
+.. Strip DOCTYPE declarations from sub-documents to enable processing
+   with Saxon.
+.. Process CF-specific content (e.g. remove revision highlights).
+.. Perform generic DocBook->AsciiDoc conversion.
