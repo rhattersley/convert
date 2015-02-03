@@ -32,7 +32,8 @@ if [[ $STEP1_DIR/$ROOT -nt $STEP2_DIR/$ROOT ]]; then
     python prepare_docbook.py $STEP1_DIR $STEP2_DIR
 fi
 
-if [[ $STEP2_DIR/$ROOT -nt $STEP3_DIR/cf-conventions.asciidoc ]]; then
+if [[ $STEP2_DIR/$ROOT -nt $STEP3_DIR/cf-conventions.asciidoc ||
+      d2a.xsl -nt $STEP3_DIR/cf-conventions.asciidoc ]]; then
     echo 'Creating AsciiDoc'
     echo '================='
     rm -f $STEP3_DIR/*.asciidoc
@@ -41,11 +42,21 @@ if [[ $STEP2_DIR/$ROOT -nt $STEP3_DIR/cf-conventions.asciidoc ]]; then
     CHUNK='chunk-output=true'
     #CHUNK=''
     java net.sf.saxon.Transform -s:$SRC_DOCBOOK -xsl:$STYLESHEET -o:cf-conventions.asciidoc -t $CHUNK
+    # TODO: Avoid shuffling files and just get Saxon to put the output
+    # in the right place.
     mv *.asciidoc $STEP3_DIR/
+    mv $STEP3_DIR/README* ./
     mv book-docinfo.xml $STEP3_DIR/
 fi
 
-if [[ $STEP3_DIR/cf-conventions.asciidoc -nt $STEP4_DIR/cf-conventions.html ]]; then
+CONVERT_TO_HTML=''
+for f in $STEP3_DIR/*.asciidoc; do
+    if [[ $f -nt $STEP4_DIR/cf-conventions.html ]]; then
+        CONVERT_TO_HTML='true'
+        break
+    fi
+done
+if [[ $CONVERT_TO_HTML ]]; then
     echo 'Creating HTML'
     echo '============='
     rm -f $STEP4_DIR/*.html

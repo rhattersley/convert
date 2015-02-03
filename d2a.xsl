@@ -868,9 +868,9 @@ ____
 
   <xsl:template match="literal/text()"><xsl:value-of select="replace(replace(replace(., '\n\s+', ' ', 'm'), 'C\+\+', '\$\$C++\$\$', 'm'), '([\[\]\*\^~])', '\\$1', 'm')"></xsl:value-of></xsl:template>
   
-<xsl:template match="userinput">**`<xsl:apply-templates />`**</xsl:template>
+<xsl:template match="userinput | varname | computeroutput">**`<xsl:apply-templates />`**</xsl:template>
   <!-- Normalize-space() on text node below includes extra handling for child elements of userinput, to add needed spaces back in. (They're removed by normalize-space(), which normalizes the two text nodes separately.) -->
-  <xsl:template match="userinput/text()">
+  <xsl:template match="userinput/text() | varname/text() | computeroutput/text()">
     <xsl:if test="preceding-sibling::* and (starts-with(.,' ') or starts-with(.,'&#10;'))">
       <xsl:text> </xsl:text>
     </xsl:if>
@@ -1535,12 +1535,6 @@ pass:[<xsl:copy-of select="."/>]
   <xsl:apply-templates select="title"/>
   <xsl:value-of select="util:carriage-returns(2)"/>
   <xsl:apply-templates select="*[not(self::title)]"/>
-</xsl:template>
-
-<xsl:template match="varname|computeroutput">
-    <xsl:text>[x-]`</xsl:text>
-    <xsl:apply-templates/>
-    <xsl:text>`</xsl:text>
 </xsl:template>
 
 <!-- Utility functions/templates -->
