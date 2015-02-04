@@ -1,0 +1,47 @@
+env:
+    global:
+        - secure: "bvLTgChqazjFoKRHd3ZWwaiEqQrGUO5EYTegdI/A2pyiR4sbUTU9BPC2efB5JSpttaLNe+uJKZjc58tes/Hlx7exn65h5uNCgUjZ9XffxL7jvwL0F0xdw//3aghywrz9l+wXG0FWzT4gPwTnOUxBamsUwJO2kixJDaXjBCuRXAM="
+        - secure: "TjmTwegHS49m7XFeJv9NtulnEOaRCLR45cs6exeeMkKOsQdDlg2W6x8vaoYy+A1ryENaUiu3Uku90XIe3w9ZAc0jbTf9pqQ0ykSPmNtqxwHy37HzJWZl7pEE30ea0Vpt4R8VLc7nqUjwlzdjAJRyWfnhxIxXdJGySb6cOT8LfX0="
+        - secure: "CoknLtpM88iaPFeqO7o/Dgh/V2uYxdYHgdSfPVzqaLmU+gygTgdFr0OoPaG/tqmZjkB8sLnyk+1FMasixwB5MO3sSLZLTgAMmhanbMCe0PAGmT8yRIbX7fmtRhTka07YYe6BraGzwnrFCPXqMouwYA72P5T31B3UkImaisKP700="
+
+install:
+    # Obtain the DocBook sources
+    - git clone https://github.com/cf-convention/cf-convention.github.io.git
+    - export DOCBOOK_DIR=cf-convention.github.io/Data/cf-conventions/cf-conventions-1.7/docbooksrc
+
+    # Install lxml
+    - sudo CFLAGS="-O0" pip install lxml
+
+    # Install the Saxon XSLT processor
+    - mkdir saxon
+    - wget http://sourceforge.net/projects/saxon/files/latest/download?source=files -O saxon/saxon.zip
+    - unzip saxon/saxon.zip -d saxon
+    - export CLASSPATH=$PWD/saxon/saxon9he.jar
+
+    # Install asciidoctor
+    - gem install asciidoctor
+    - asciidoctor --version
+
+before_script:
+    - git config --global user.email $GIT_EMAIL
+    - git config --global user.name $GIT_NAME
+    - export ROOT=cf-conventions.xml
+
+script:
+    - mkdir step1
+    - python strip_doctype.py $DOCBOOK_DIR step1
+    - cp $DOCBOOK_DIR/$ROOT step1
+    - mkdir step2
+    - python prepare_docbook.py step1 step2
+    - mkdir step3
+    - java net.sf.saxon.Transform -s:step2/$ROOT -xsl:d2a.xsl -o:step3/cf-conventions.asciidoc -t chunk-output=true
+    - mkdir step4
+    - asciidoctor step3/cf-conventions.asciidoc -D step4
+
+after_success:
+    - git clone https://${GH_TOKEN}@github.com/cf-metadata/cf-metadata.github.io.git pages
+    - cp step4/cf-conventions.html pages/
+    - cd pages
+    - git add cf-conventions.html
+    - git commit -m 'Automatic build from cf-metadata/convert'
+    - git push origin master

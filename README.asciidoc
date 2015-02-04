@@ -1,6 +1,8 @@
 = Convert CF from DocBook to AsciiDoc[tor]
 Richard Hattersley
 
+image:https://travis-ci.org/cf-metadata/convert.svg?branch=master["Build Status", link="https://travis-ci.org/cf-metadata/convert"]
+
 Builds on the XSL stylesheet in
 https://github.com/oreillymedia/docbook2asciidoc to provide automated
 conversion of the CF convention document from

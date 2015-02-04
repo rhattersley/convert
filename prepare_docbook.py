@@ -9,6 +9,7 @@ import sys
 def go(src_dir, dest_dir):
     base_cmd = ['java', 'net.sf.saxon.Transform', '-xsl:prepare_docbook.xsl']
     for name in os.listdir(src_dir):
+        print('Adjusting', name)
         src = os.path.join(src_dir, name)
         dest = os.path.join(dest_dir, name)
         if name == 'cf-conventions.xml':
