@@ -331,6 +331,22 @@
   <xsl:value-of select="normalize-space(.)"/>
 </xsl:template>
 
+<!-- Strip leading whitespace from first text node in <para>, if it does not have preceding element siblings -->
+<xsl:template match="para[count(element()) != 0]/text()[1][not(preceding-sibling::element())]">
+  <xsl:call-template name="strip-whitespace">
+    <xsl:with-param name="text-to-strip" select="."/>
+    <xsl:with-param name="leading-whitespace" select="'strip'"/>
+  </xsl:call-template>
+</xsl:template>
+
+<!-- Strip leading whitespace from text nodes in <para> if preceded by <variablelist> -->
+<xsl:template match="para[count(element()) != 0]/text()[preceding-sibling::variablelist]">
+  <xsl:call-template name="strip-whitespace">
+    <xsl:with-param name="text-to-strip" select="."/>
+    <xsl:with-param name="leading-whitespace" select="'strip'"/>
+  </xsl:call-template>
+</xsl:template>
+
 <!-- Strip leading whitespace from first text node in <term>, if it does not have preceding element siblings --> 
 <xsl:template match="term[count(element()) != 0]/text()[1][not(preceding-sibling::element())]">
   <xsl:call-template name="strip-whitespace">
@@ -489,7 +505,7 @@
   <xsl:apply-templates select="*[not(self::title)]"/>
 </xsl:template>
 
-<xsl:template match="sect1">
+<xsl:template match="sect1|simplesect">
   <!-- If sect1 title is "References," override special Asciidoc section macro -->
 <xsl:if test="title = 'References'">
   <xsl:text>[sect2]</xsl:text>
