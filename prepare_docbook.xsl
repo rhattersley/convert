@@ -8,8 +8,12 @@
         </xsl:copy>
     </xsl:template>
 
-    <!-- Get rid of deleted text -->
+    <!-- Get rid of deleted text and comments -->
+    <xsl:template match="section[title[count(element())=1 and emphasis[@role='deletedtext']]]"/>
     <xsl:template match="emphasis[@role='deletedtext']"/>
+    <xsl:template match="para[count(element())=1 and emphasis[@role='commenttext']]"/>
+    <xsl:template match="emphasis[@role='commenttext']"/>
+
     <!-- Remove the highlight from new text -->
     <xsl:template match="emphasis[@role='newtext']">
         <xsl:apply-templates select="node()"/>
