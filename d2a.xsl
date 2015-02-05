@@ -42,6 +42,8 @@
   <xsl:text>:sectanchors:</xsl:text>
   <xsl:value-of select="util:carriage-returns(1)"/>
   <xsl:text>:toc: macro</xsl:text>
+  <xsl:value-of select="util:carriage-returns(1)"/>
+  <xsl:text>:toclevels: 3</xsl:text>
   <xsl:value-of select="util:carriage-returns(2)"/>
   <xsl:text>== About the authors</xsl:text>
   <xsl:value-of select="util:carriage-returns(1)"/>
