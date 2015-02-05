@@ -106,12 +106,6 @@
     
 </xsl:template>
 
-<xsl:template match="processing-instruction()">
-<xsl:text>+++</xsl:text>
-<xsl:copy-of select="."/>
-<xsl:text>+++</xsl:text>
-</xsl:template>
-
 <xsl:template match="book/title|bookinfo/title">
   <xsl:text>= </xsl:text>
   <xsl:value-of select="."/>
@@ -1516,11 +1510,22 @@ pass:[<xsl:copy-of select="."/>]
 <xsl:template match="row">
   <xsl:for-each select="entry">
     <xsl:text>|</xsl:text>
+    <xsl:if test="not(processing-instruction('dbfo'))">
+      <xsl:text>{set:cellbgcolor!}</xsl:text>
+    </xsl:if>
     <xsl:apply-templates/>
   </xsl:for-each>
     <xsl:if test="not (entry/para)">
       <xsl:value-of select="util:carriage-returns(1)"/>
     </xsl:if>
+      <xsl:value-of select="util:carriage-returns(1)"/>
+  </xsl:template>
+
+<!-- Convert <?dbfo bgcolor="#99dddd" ?> into {set:cellbgcolor:99dddd} -->
+<xsl:template match="processing-instruction('dbfo')">
+    <xsl:text>{set:cellbgcolor:</xsl:text>
+    <xsl:value-of select="translate(substring-after(., '='), '&quot; ', '')"/>
+    <xsl:text>}</xsl:text>
 </xsl:template>
 
 <xsl:template match="footnote">

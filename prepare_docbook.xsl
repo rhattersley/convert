@@ -25,4 +25,8 @@
         <xsl:apply-templates select="node()"/>
         <xsl:text>)</xsl:text>
     </xsl:template>
+
+    <!-- Get rid of spurious paragraphs containing only
+         whitespace/non-breaking-space. -->
+    <xsl:template match="para[count(element()) = 0]/text()[matches(., '^[ &#160;]+$')]"/>
 </xsl:stylesheet>
