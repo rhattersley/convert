@@ -25,7 +25,8 @@ if [[ $DOCBOOK_DIR/$ROOT -nt $STEP1_DIR/$ROOT ]]; then
     cp $DOCBOOK_DIR/$ROOT $STEP1_DIR/
 fi
 
-if [[ $STEP1_DIR/$ROOT -nt $STEP2_DIR/$ROOT ]]; then
+if [[ $STEP1_DIR/$ROOT -nt $STEP2_DIR/$ROOT ||
+      prepare_docbook.xsl -nt $STEP2_DIR/cf-conventions.xml ]]; then
     echo 'Preparing DocBook'
     echo '================='
     rm -f $STEP2_DIR/*.xml
